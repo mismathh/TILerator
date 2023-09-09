@@ -1,0 +1,16 @@
+{
+  "name": "tilerator",
+  "version": "0.0.1",
+  "description": "A CL tool that will be able to generate TIL posts. It will be able to convert text, snippets of code, and images to HTML format",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mismathh/TILerator.git"
+  },
+  "keywords": [],
+  "author": "Muzzammil Ismathhimam",
+  "license": "MIT"
+}
