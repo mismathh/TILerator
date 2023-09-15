@@ -1,3 +1,7 @@
+# Custom director
+.vscode
+./till
+
 # Logs
 logs
 *.log

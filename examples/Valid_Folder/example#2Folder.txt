@@ -1,0 +1,6 @@
+This is an 2nd example file inside a folder used as a text run.
+I am in a new line now.
+
+
+There should be two gaps in between this line and the previous.
+Done.
