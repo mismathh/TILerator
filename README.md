@@ -7,7 +7,6 @@ Clone repository and install node packages locally
 ```
 git clone https://github.com/mismathh/TILerator.git
 cd TILerator
-npm install
 ```
 
 # Features
@@ -26,15 +25,15 @@ Optional Features
 # Usage/Examples
 Pass in a flag
 ```
-TILerator <flag>
+node src/index.js <flag>
 
---> TILerator -v
+--> node src/index.js -v
 ```
 Pass in a file path or directory path
 ```
-TILerator <filePath | directoryPath>
+node src/index.js <filePath | directoryPath>
 
---> TILerator ./txtfile.txt
+--> node src/index.js ./examples/example#1.txt
 ```
 
 ## Flags
