@@ -1,6 +1,6 @@
 # Custom director
 .vscode
-./till
+til/*
 
 # Logs
 logs
