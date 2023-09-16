@@ -33,7 +33,7 @@ const manageOutputFolder = (path = "./til") => {
       fs.mkdirSync(path);
       console.log("Directory successfully created");
     } catch {
-      console.log(err);
+      console.error(err);
     }
   } else {
     console.log("Directory does not exist... Creating output directory");
@@ -41,7 +41,7 @@ const manageOutputFolder = (path = "./til") => {
       fs.mkdirSync(path);
       console.log("Directory successfully created");
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 }
@@ -58,7 +58,7 @@ const generateHTML = (fileData) => {
     let title_markup = "<h1>" + files[i][0] + "</h1>";
 
     if (files[i][0] === "") {
-      files[i][0] = `TIL Post #${i + 1}`;
+      files[i][0] = `TIL Post ${i + 1}`;
     }
 
     var html = `<!doctype html>
@@ -79,7 +79,7 @@ const generateHTML = (fileData) => {
       // need to update for custom output path
       console.log(`File successfully written at: ./till/${files[i][0]}.html`);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 };
@@ -145,18 +145,20 @@ const readFileFromPath = (path) => {
     // Remove empty lines
     lines.forEach((line, index) => {
       if (line.endsWith("\r")) {
-        lines[index] = "";
+        //lines[index] = "";
+        lines.splice(index, 1);
       }
     });
 
     // Putting back title with markup
+    if (title != "") {
     lines.unshift(markupTitle);
+    }
 
     // Push title and lines to array
     let arr = [title, lines];
     fileData.push(arr);
   }
-  //console.log(fileData);
   generateHTML(fileData);
 };
 
@@ -176,7 +178,7 @@ const determinePath = (path) => {
       // Read directory and get all file paths
       fs.readdir(path, (err, files) => {
         if (err) {
-          console.log(err);
+          console.error(err);
           return;
         } else {
           for (let i = 0; i < files.length; i++) {
@@ -190,7 +192,7 @@ const determinePath = (path) => {
       });
     }
   } catch (err) {
-    console.log("Unable to access path. \nPlease make sure path is correct. \n");
+    console.error("Unable to access path. \nPlease make sure path is correct. \n");
   }
 };
 
