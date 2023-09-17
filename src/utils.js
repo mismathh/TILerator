@@ -1,3 +1,4 @@
+// Imports
 const fs = require("fs");
 const { version } = require("../package.json");
 
@@ -44,7 +45,7 @@ const manageOutputFolder = (path = "./til") => {
       console.error(err);
     }
   }
-}
+};
 
 /* Generate HTML file from the text that is passed in */
 const generateHTML = (fileData) => {
@@ -102,7 +103,7 @@ const readFileFromPath = (path) => {
       lines[1] === "\r" &&
       lines[2] === "\r"
     ) {
-      title = lines[0].substring(0, lines[0].length - 1)
+      title = lines[0].substring(0, lines[0].length - 1);
       markupTitle = `<h1>${title}</h1>`;
       lines.splice(0, 3);
     }
@@ -115,7 +116,6 @@ const readFileFromPath = (path) => {
 
     /* For each line, add markup tags */
     for (let j = 0; j < lines.length; j++) {
-
       /* if there is empty line after current line, then add </p> to current line */
       if (
         lines[j] != "\r" &&
@@ -152,7 +152,7 @@ const readFileFromPath = (path) => {
 
     // Putting back title with markup
     if (title != "") {
-    lines.unshift(markupTitle);
+      lines.unshift(markupTitle);
     }
 
     // Push title and lines to array
@@ -164,35 +164,42 @@ const readFileFromPath = (path) => {
 
 /* Determines if path received is a file or directory path */
 const determinePath = (path) => {
-  let directoryFilePaths = [];
-  let filePathArray = [path];
-  
+  let directoryFilePath = [];
+  let filePath = [path];
+
   try {
-    // Check if path is a file or directory
+    // Check if path is a file or directory and try to read it
     if (fs.statSync(path).isFile()) {
-      console.log("Received file path. \n");
-      readFileFromPath(filePathArray);
+      console.log("File path received. \n");
+      readFileFromPath(filePath);
     } else if (fs.statSync(path).isDirectory()) {
-      console.log("This is a directory path. \n");
+      console.log("Directory path received. \n");
 
       // Read directory and get all file paths
       fs.readdir(path, (err, files) => {
         if (err) {
-          console.error(err);
+          console.error(`Error: ${err}`);
           return;
         } else {
+          
+          // Get all file paths from directory that end with .txt
           for (let i = 0; i < files.length; i++) {
             if (files[i].endsWith(".txt")) {
-              directoryFilePaths.push(`${path}/${files[i]}`);
+              directoryFilePath.push(`${path}/${files[i]}`);
             }
           }
 
-          readFileFromPath(directoryFilePaths);
+          readFileFromPath(directoryFilePath);
         }
       });
     }
   } catch (err) {
-    console.error("Unable to access path. \nPlease make sure path is correct. \n");
+    console.error(`Unable to access path.`);
+    if (err.code === "ENOENT") {
+      console.error(`Path does not exist. \n`);
+    } else {
+      console.error(err);
+    }
   }
 };
 
