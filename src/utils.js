@@ -161,40 +161,42 @@ const readFileFromPath = (filePath) => {
       let arr = [title, lines];
       fileData.push(arr);
     } catch (err) {
-      console.error(`Unable to read text file\nError: ${err}`);
+      console.error(`Error while processing text file\nError: ${err}`);
     }
   }
   generateHTML(fileData);
 };
 
 /* Determines if path received is a file or directory path */
-const determinePath = (filePath) => {
+const determinePath = (inputPath) => {
   let directoryFilePath = [];
 
   try {
-    // Check if path is a file or directory and try to read it
-    if (fs.statSync(filePath[0]).isFile()) {
+    // Check if path is a text file or directory and try to read it
+    if (fs.statSync(inputPath[0]).isFile() && path.extname(inputPath[0]) === ".txt") {
       console.log("File path received. \n");
-      readFileFromPath(filePath);
-    } else if (fs.statSync(filePath).isDirectory()) {
+      readFileFromPath(inputPath);
+    } else if (fs.statSync(inputPath[0]).isDirectory()) {
       console.log("Directory path received. \n");
 
       // Read directory and get all file paths
-      fs.readdir(filePath, (err, files) => {
+      fs.readdir(inputPath[0], (err, files) => {
         if (err) {
-          console.error(`Error: ${err}`);
+          console.error(`Unable to read directory.\nError: ${err}`);
           return;
         } else {
           // Get all file paths from directory that end with .txt
           for (let i = 0; i < files.length; i++) {
             if (path.extname(files[i]) === ".txt") {
-              directoryFilePath.push(`${filePath}/${files[i]}`);
+              directoryFilePath.push(`${inputPath[0]}/${files[i]}`);
             }
           }
 
           readFileFromPath(directoryFilePath);
         }
       });
+    } else {
+      console.error(`Path does not point to a text file. \n`);
     }
   } catch (err) {
     console.error(`Unable to access path.`);
