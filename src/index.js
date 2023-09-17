@@ -1,37 +1,30 @@
+#! /usr/bin/env node
 const utils = require("../src/utils.js");
 
+// Check if user has provided an argument
 if (process.argv.length === 2) {
-  console.log(
-    "Please provide a path to a directory as an argument.\nEnter TILerator --help for more information.\n"
+  console.error(
+    "Please provide a path to a directory as an argument. Enter TILerator --help for more information.\n"
   );
 } else {
   // Remove first two arguments from process.argv
   const input = process.argv.slice(2);
 
-  if (input[0].startsWith("-") && input.length === 1) {
-    switch (input[0]) {
-      case "-v":
-      case "--version":
-        utils.displayVersion();
-        break;
-      case "-h":
-      case "--help":
-        utils.helpManual();
-        break;
-      default:
-        console.log("Invalid flag provided.\nEnter TILerator --help for more information.\n");
-    }
-  } else if (input.length === 1) {
-    utils.determinePath(input[0])
+  if (input.includes("-v") || input.includes("--version")) {
+    utils.displayVersion();
+  } else if (input.includes("-h") || input.includes("--help")) {
+    utils.helpManual();
   } else if (
-    (input[0] === "-o" || input[0] === "--output") &&
-    input.length === 3
+    (input.includes("-o") || input.includes("--output")) &&
+    input.length === 2
   ) {
     // Still need to implement
-    console.log(
-      "Output flag provided. Expected input is a file or directory path + new output path. \n"
-    );
+    console.log("Output flag detected");
+  } else if (input.length === 1 && !input[0].startsWith("-")) {
+    utils.determinePath(input[0]);
   } else {
-    console.log("Invalid arguments provided. \nEnter TILerator --help for more information.\n");
+    console.error(
+      "Invalid arguments provided. Enter TILerator --help for more information.\n"
+    );
   }
 }
