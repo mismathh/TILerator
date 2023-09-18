@@ -2,6 +2,7 @@
 const fs = require("fs");
 const path = require("path");
 const { version } = require("../package.json");
+const { start } = require( "repl" );
 
 /* Help message that shows how to use tool and the options that are available */
 const helpManual = () => {
@@ -49,15 +50,15 @@ const manageOutputFolder = (filePath = "./til") => {
 };
 
 /* Generate HTML file from the text that is passed in */
-const generateHTML = (fileData) => {
+const generateHTML = (fileData, filePath) => {
   files = fileData;
+  console.log(files)
 
   // Reset output folder
   manageOutputFolder();
 
   // Generate HTML file for each text file
   for (i = 0; i < fileData.length; i++) {
-    let title_markup = "<h1>" + files[i][0] + "</h1>";
 
     if (files[i][0] === "") {
       files[i][0] = `TIL Post ${i + 1}`;
@@ -71,109 +72,97 @@ const generateHTML = (fileData) => {
       <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
-      ${files[i][1].join("\n\t\t\t")}
+      ${files[i][1]}
     </body>
     </html>`;
 
     // Write text to HTML file -- Need to update for custom output path
     try {
-      fs.writeFileSync(`./til/${files[i][0]}.html`, html);
+      fs.writeFileSync(`./til/${path.basename(filePath[i], ".txt")}.html`, html);
       // need to update for custom output path
-      console.log(`File successfully written at: ./till/${files[i][0]}.html`);
+      console.log(`File successfully written at: ./till/${filePath[i]}.html`);
     } catch (err) {
       console.error(err);
     }
   }
 };
 
-/* Read text file(s) from given path(s) and add markup*/
-const readFileFromPath = (filePath) => {
-  let fileData = [];
+const addHTMLMarkup = (lines) => {
+  let body = lines;
+  let markupTitle = "";
+  let paragraphs = [""];
+  let startIndex = 0;
+  let pIndex = 0;
 
-  // Read text file that is found from each path given
-  for (i = 0; i < filePath.length; i++) {
-    try {
-      let data = fs.readFileSync(filePath[i], "utf8");
-      let lines = data.split("\n");
-      let title = "";
-      let markupTitle = "";
+  // Check if there is a title in text file
+  if (
+    body.length >= 3 &&
+    body[0].length > 0 &&
+    body[1] === "" &&
+    body[2] === ""
+  ) {
+    markupTitle = `<h1>${body[0]}</h1>`;
+    body.splice(0, 3);
+  }
+  
+  for (i = 0; i < body.length; i++) {
+    if (body[i] === "") {
+      paragraphs[pIndex] = body.slice(startIndex, i).join(" ");
+      startIndex = i + 1;
+      pIndex++;
+      
+    }
 
-      // Check if there is a title in text file
-      if (
-        lines.length >= 3 &&
-        lines[0].length > 0 &&
-        lines[1] === "\r" &&
-        lines[2] === "\r"
-      ) {
-        title = lines[0].substring(0, lines[0].length - 1);
-        markupTitle = `<h1>${title}</h1>`;
-        lines.splice(0, 3);
-      }
+    if (body[startIndex] === "") {
+      startIndex++;
+      i++;
+    }
 
-      // Add <p>/</p> tags to first and last line
-      if (lines[0] != "\r") {
-        lines[0] = `<p>${lines[0]}`;
-      }
-      lines[lines.length - 1] = lines[lines.length - 1] + "</p>";
-
-      /* For each line, add markup tags */
-      for (let j = 0; j < lines.length; j++) {
-        /* if there is empty line after current line, then add </p> to current line */
-        if (
-          lines[j] != "\r" &&
-          lines[j].endsWith("\r") &&
-          lines[j + 1] === "\r"
-        ) {
-          lines[j] = lines[j].substring(0, lines[j].length - 1) + "</p>";
-        }
-
-        /* if there is no empty line after current line, then remove new line character */
-        if (
-          lines[j].endsWith("\r") &&
-          lines[j + 1].length > 0 &&
-          lines[j + 1] != "\r"
-        ) {
-          if (lines[j] != "\r") {
-            lines[j] = lines[j].substring(0, lines[j].length - 1);
-          }
-        }
-
-        /* if there is empty line before current line, then add <p> to current line */
-        if (j > 0 && lines[j - 1] === "\r" && lines[j] != "\r") {
-          lines[j] = "<p>" + lines[j];
-        }
-      }
-
-      // Remove empty lines
-      lines.forEach((line, index) => {
-        if (line.endsWith("\r")) {
-          //lines[index] = "";
-          lines.splice(index, 1);
-        }
-      });
-
-      // Putting back title with markup
-      if (title != "") {
-        lines.unshift(markupTitle);
-      }
-
-      // Push title and lines to array
-      let arr = [title, lines];
-      fileData.push(arr);
-    } catch (err) {
-      console.error(`Error while processing text file\nError: ${err}`);
+    if (i === body.length - 1) {
+      paragraphs[pIndex] = body.slice(startIndex, i +1).join(" ");
     }
   }
-  generateHTML(fileData);
+
+  let markupParagraphs = paragraphs.map((paragraph, index) => {
+    return `<p>${paragraph}</p>`;
+  });
+
+  if (markupTitle !== "") {
+    markupParagraphs.unshift(markupTitle);
+  }
+  
+  return [markupTitle, markupParagraphs.join("\n\t\t\t")];
+};
+
+/* Read text file(s) from given path(s) and add markup*/
+const readFileFromPath = (filePath) => {
+  let data = "";
+  let markupData = [];
+
+  // Read text file that is found from each path given
+  for (a = 0; a < 2; a++) {
+    try {
+      data = fs.readFileSync(filePath[a], "utf8");
+      console.log(`File successfully read at: ${filePath[a]}`)
+      } catch (err) {
+      console.error(`Error while processing text file\nError: ${err}`);
+      return;
+    }
+    markupData.push(addHTMLMarkup(data.split("\r\n")));
+  }
+  generateHTML(markupData, filePath);
 };
 
 /* Determines if path received is a file or directory path */
 const determinePath = (inputPath) => {
   let directoryFilePath = [];
-
+  console.log(inputPath[0]);
   try {
     // Check if path is a text file or directory and try to read it
-    if (fs.statSync(inputPath[0]).isFile() && path.extname(inputPath[0]) === ".txt") {
+    if (
+      fs.statSync(inputPath[0]).isFile() &&
+      path.extname(inputPath[0]) === ".txt"
+    ) {
       console.log("File path received. \n");
       readFileFromPath(inputPath);
     } else if (fs.statSync(inputPath[0]).isDirectory()) {
