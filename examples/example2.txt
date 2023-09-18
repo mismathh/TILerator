@@ -4,5 +4,9 @@ This file has a title
 This is an example file used as a text run.
 I am in a new line now.
 
-This should be a new paragraph
+This should be a new paragraph.
+
+
+This should be another new paragraph.
+It has 3 lines to work with.
 Done.
