@@ -24,16 +24,14 @@ const displayVersion = () => {
 };
 
 /* Creates/deletes output folder -- Need to implement for custom output folder path*/
-const manageOutputFolder = (filePath = "./til") => {
-  /* TODO: Need to validate custom output path*/
-
+const manageOutputFolder = (outputFolder) => {
   // Start a fresh output folder
-  if (fs.existsSync(filePath)) {
+  if (fs.existsSync(outputFolder)) {
     console.log("Directory exists... Removing folder");
     try {
-      fs.rmSync(filePath, { recursive: true });
+      fs.rmSync(outputFolder, { recursive: true });
       console.log("Directory successfully removed");
-      fs.mkdirSync(filePath);
+      fs.mkdirSync(outputFolder);
       console.log("Directory successfully created");
     } catch {
       console.error(err);
@@ -41,7 +39,7 @@ const manageOutputFolder = (filePath = "./til") => {
   } else {
     console.log("Directory does not exist... Creating output directory");
     try {
-      fs.mkdirSync(filePath);
+      fs.mkdirSync(outputFolder);
       console.log("Directory successfully created");
     } catch (err) {
       console.error(err);
@@ -50,12 +48,8 @@ const manageOutputFolder = (filePath = "./til") => {
 };
 
 /* Generate HTML file from the text that is passed in */
-const generateHTML = (fileData, filePath) => {
+const generateHTML = (fileData, filePath, outputFolder) => {
   files = fileData;
-  console.log(files)
-
-  // Reset output folder
-  manageOutputFolder();
 
   // Generate HTML file for each text file
   for (i = 0; i < fileData.length; i++) {
@@ -78,9 +72,9 @@ const generateHTML = (fileData, filePath) => {
 
     // Write text to HTML file -- Need to update for custom output path
     try {
-      fs.writeFileSync(`./til/${path.basename(filePath[i], ".txt")}.html`, html);
+      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], ".txt")}.html`, html);
       // need to update for custom output path
-      console.log(`File successfully written at: ./till/${filePath[i]}.html`);
+      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], ".txt")}.html`);
     } catch (err) {
       console.error(err);
     }
@@ -130,33 +124,41 @@ const addHTMLMarkup = (lines) => {
   if (markupTitle !== "") {
     markupParagraphs.unshift(markupTitle);
   }
-  
+
   return [markupTitle, markupParagraphs.join("\n\t\t\t")];
 };
 
 /* Read text file(s) from given path(s) and add markup*/
-const readFileFromPath = (filePath) => {
+const readFileFromPath = (filePath, outputFolder) => {
   let data = "";
   let markupData = [];
 
   // Read text file that is found from each path given
-  for (a = 0; a < 2; a++) {
+  for (a = 0; a < filePath.length; a++) {
     try {
       data = fs.readFileSync(filePath[a], "utf8");
-      console.log(`File successfully read at: ${filePath[a]}`)
       } catch (err) {
       console.error(`Error while processing text file\nError: ${err}`);
       return;
     }
     markupData.push(addHTMLMarkup(data.split("\r\n")));
   }
-  generateHTML(markupData, filePath);
+
+  try {
+    // Reset output folder
+    manageOutputFolder(outputFolder);
+  
+    generateHTML(markupData, filePath, outputFolder);
+
+  } catch (err) {
+    console.error(`Error while processing text file\nError: ${err}`);
+    return;
+  }
 };
 
 /* Determines if path received is a file or directory path */
-const determinePath = (inputPath) => {
+const determinePath = (inputPath, outputFolder = "./til") => {
   let directoryFilePath = [];
-  console.log(inputPath[0]);
   try {
     // Check if path is a text file or directory and try to read it
     if (
@@ -164,7 +166,7 @@ const determinePath = (inputPath) => {
       path.extname(inputPath[0]) === ".txt"
     ) {
       console.log("File path received. \n");
-      readFileFromPath(inputPath);
+      readFileFromPath(inputPath, outputFolder);
     } else if (fs.statSync(inputPath[0]).isDirectory()) {
       console.log("Directory path received. \n");
 
@@ -181,7 +183,7 @@ const determinePath = (inputPath) => {
             }
           }
 
-          readFileFromPath(directoryFilePath);
+          readFileFromPath(directoryFilePath, outputFolder);
         }
       });
     } else {

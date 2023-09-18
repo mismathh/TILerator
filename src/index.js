@@ -16,10 +16,19 @@ if (process.argv.length === 2) {
     utils.helpManual();
   } else if (
     (input.includes("-o") || input.includes("--output")) &&
-    input.length === 2
+    input.length === 3
   ) {
-    // Still need to implement
-    console.log("Output flag detected");
+    let filePath = "";
+    let outputFolder = "";
+
+    if (input[0] === "-o" || input[0] === "--output") {
+      outputFolder = input[1];
+      filePath = input[2];
+    } else if (input[1] === "-o" || input[1] === "--output") {
+      outputFolder = input[2];
+      filePath = input[0];
+    }
+    utils.determinePath([filePath], outputFolder);
   } else if (input.length === 1 && !input[0].startsWith("-")) {
     utils.determinePath([input[0]]);
   } else {
