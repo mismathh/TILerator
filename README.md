@@ -7,6 +7,7 @@ Clone repository and install node packages locally
 ```
 git clone https://github.com/mismathh/TILerator.git
 cd TILerator
+npm install -g .
 ```
 
 # Features
@@ -20,20 +21,24 @@ Mandatory Features
 
 Optional Features
 - Parses title from text file to enhance HTML with `<h1>...</h1>` markup tags
-- Allow a custom output folder path to be passed to create HTML file in     **(Work-in-progress)**
+- Allows a custom output folder path to be passed using `--output` or `-o` flag
 
 # Usage/Examples
+```
+TILerator [flag] <filePath | directoryPath>
+```
+
 Pass in a flag
 ```
-node src/index.js <flag>
+TILerator <flag>
 
---> node src/index.js -v
+--> TILerator -v
 ```
 Pass in a file path or directory path
 ```
-node src/index.js <filePath | directoryPath>
+TILerator <filePath | directoryPath>
 
---> node src/index.js ./examples/example#1.txt
+--> TILerator ./examples/example#1.txt
 ```
 
 ## Flags
@@ -41,5 +46,4 @@ node src/index.js <filePath | directoryPath>
 | ---- | ----------- |
 | -v, --version | Displays version of tool |
 | -h, --help | Display help/usage menu |
-| -o, --output | Allows for custom output folder | 
-> -o, --output still needs to be implemented
+| -o, --output | Allows for custom output folder |
