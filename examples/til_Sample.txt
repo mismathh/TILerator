@@ -1,0 +1,8 @@
+TIL - Path module
+
+
+Today I learned about the "path" module that comes with Node.js. This module provides extra utilities when working with file and/or directory paths.
+
+Two methods that I found useful within the path module are: path.basename(path [, suffix]) and path.extname(path). Path.basename will return the last portion of a path, and has an optional argument that will remove the end portion of the filepath. Path.extname will return the extension from the last portion of the path, which will pull from the last occurrence of a '.' character to the end of the string. If there is no '.' character within the path name, an empty string will be returned.
+
+That's it for now.
