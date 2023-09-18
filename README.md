@@ -20,7 +20,7 @@ Mandatory Features
  - Provide `--version` or `-v` flag to view version
  - Provide `--help` or `-h` flag to view help/usage message
  - Provide a path for a file to generate an html file
- - Provide a path for a directory to generate html files for each text file 
+ - Provide a path for a directory to generate html files for each text file within folder
  - Adds HTML markup tags such as `<p>...</p>` to text
  - Outputs files to `./til` folder by default
 
@@ -43,7 +43,11 @@ Pass in a file path or directory path
 ```
 TILerator <filePath | directoryPath>
 
---> TILerator ./examples/example#1.txt
+--> TILerator ./examples/example1.txt
+```
+Use the `-o` or `--output` flag to generate html files in a custom folder
+```
+---> TILerator ./examples/til_Sample.txt -o ./htmlFiles
 ```
 
 ## Flags
@@ -52,3 +56,4 @@ TILerator <filePath | directoryPath>
 | -v, --version | Displays version of tool |
 | -h, --help | Display help/usage menu |
 | -o, --output | Allows for custom output folder |
+> Custom output folder path must be placed right after `-o/--output` flag
