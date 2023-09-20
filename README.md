@@ -23,6 +23,7 @@ Mandatory Features
  - Provide a path for a directory to generate html files for each text file within folder
  - Adds HTML markup tags such as `<p>...</p>` to text
  - Outputs files to `./til` folder by default
+ - Handle markdown files
 
 Optional Features
 - Parses title from text file to enhance HTML with `<h1>...</h1>` markup tags
