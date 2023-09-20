@@ -161,9 +161,11 @@ const determinePath = (inputPath, outputFolder = "./til") => {
   let directoryFilePath = [];
   try {
     // Check if path is a text file or directory and try to read it
+    const fileTypes = [".txt", ".md"];
+
     if (
       fs.statSync(inputPath[0]).isFile() &&
-      path.extname(inputPath[0]) === ".txt"
+      fileTypes.includes(path.extname(inputPath[0]))
     ) {
       console.log("File path received. \n");
       readFileFromPath(inputPath, outputFolder);
@@ -176,9 +178,9 @@ const determinePath = (inputPath, outputFolder = "./til") => {
           console.error(`Unable to read directory.\nError: ${err}`);
           return;
         } else {
-          // Get all file paths from directory that end with .txt
+          // Get all file paths from directory that end with .txt or .md
           for (let i = 0; i < files.length; i++) {
-            if (path.extname(files[i]) === ".txt") {
+            if (fileTypes.includes(path.extname(files[i]))) {
               directoryFilePath.push(`${inputPath[0]}/${files[i]}`);
             }
           }
