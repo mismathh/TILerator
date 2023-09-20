@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { version } = require("../package.json");
 const { start } = require( "repl" );
+const markdownToHTML = require("./markdownToHTML.js");
 
 /* Help message that shows how to use tool and the options that are available */
 const helpManual = () => {
@@ -70,23 +71,30 @@ const generateHTML = (fileData, filePath, outputFolder) => {
     </body>
     </html>`;
 
-    // Write text to HTML file -- Need to update for custom output path
+    // Write input to HTML file -- Need to update for custom output path
     try {
-      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], ".txt")}.html`, html);
+      const fileType = filePath[i].split(".")[1];
+      
+      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], `.${fileType}`)}.html`, html);
       // need to update for custom output path
-      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], ".txt")}.html`);
+      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], `.${fileType}`)}.html`);
     } catch (err) {
       console.error(err);
     }
   }
 };
 
-const addHTMLMarkup = (lines) => {
+const addHTMLMarkup = (lines, fileType) => {
   let body = lines;
   let markupTitle = "";
   let paragraphs = [""];
   let startIndex = 0;
   let pIndex = 0;
+
+  // Parse markdown tags
+  if (fileType === "md") {
+    body = body.map(line => markdownToHTML(line));
+  }
 
   // Check if there is a title in text file
   if (
@@ -141,7 +149,8 @@ const readFileFromPath = (filePath, outputFolder) => {
       console.error(`Error while processing text file\nError: ${err}`);
       return;
     }
-    markupData.push(addHTMLMarkup(data.split("\r\n")));
+    const fileType = filePath[a].split(".").pop();
+    markupData.push(addHTMLMarkup(data.split("\r\n"), fileType));
   }
 
   try {
