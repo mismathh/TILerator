@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { version } = require("../package.json");
 const { start } = require( "repl" );
+const markdownToHTML = require("./markdownToHTML.js");
 
 /* Help message that shows how to use tool and the options that are available */
 const helpManual = () => {
@@ -70,23 +71,28 @@ const generateHTML = (fileData, filePath, outputFolder) => {
     </body>
     </html>`;
 
-    // Write text to HTML file -- Need to update for custom output path
+    // Write input to HTML file -- Need to update for custom output path
     try {
-      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], ".txt")}.html`, html);
+      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`, html);
       // need to update for custom output path
-      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], ".txt")}.html`);
+      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`);
     } catch (err) {
       console.error(err);
     }
   }
 };
 
-const addHTMLMarkup = (lines) => {
+const addHTMLMarkup = (lines, fileType) => {
   let body = lines;
   let markupTitle = "";
   let paragraphs = [""];
   let startIndex = 0;
   let pIndex = 0;
+
+  // Parse markdown tags
+  if (fileType === "md") {
+    body = body.map(line => markdownToHTML(line));
+  }
 
   // Check if there is a title in text file
   if (
@@ -141,7 +147,8 @@ const readFileFromPath = (filePath, outputFolder) => {
       console.error(`Error while processing text file\nError: ${err}`);
       return;
     }
-    markupData.push(addHTMLMarkup(data.split("\r\n")));
+    const fileType = filePath[a].split(".").pop();
+    markupData.push(addHTMLMarkup(data.split("\r\n"), fileType));
   }
 
   try {
@@ -161,9 +168,11 @@ const determinePath = (inputPath, outputFolder = "./til") => {
   let directoryFilePath = [];
   try {
     // Check if path is a text file or directory and try to read it
+    const fileTypes = [".txt", ".md"];
+
     if (
       fs.statSync(inputPath[0]).isFile() &&
-      path.extname(inputPath[0]) === ".txt"
+      fileTypes.includes(path.extname(inputPath[0]))
     ) {
       console.log("File path received. \n");
       readFileFromPath(inputPath, outputFolder);
@@ -176,9 +185,9 @@ const determinePath = (inputPath, outputFolder = "./til") => {
           console.error(`Unable to read directory.\nError: ${err}`);
           return;
         } else {
-          // Get all file paths from directory that end with .txt
+          // Get all file paths from directory that end with .txt or .md
           for (let i = 0; i < files.length; i++) {
-            if (path.extname(files[i]) === ".txt") {
+            if (fileTypes.includes(path.extname(files[i]))) {
               directoryFilePath.push(`${inputPath[0]}/${files[i]}`);
             }
           }
