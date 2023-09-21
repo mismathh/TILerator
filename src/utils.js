@@ -73,11 +73,9 @@ const generateHTML = (fileData, filePath, outputFolder) => {
 
     // Write input to HTML file -- Need to update for custom output path
     try {
-      const fileType = filePath[i].split(".")[1];
-      
-      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], `.${fileType}`)}.html`, html);
+      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`, html);
       // need to update for custom output path
-      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], `.${fileType}`)}.html`);
+      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`);
     } catch (err) {
       console.error(err);
     }
