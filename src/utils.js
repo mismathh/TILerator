@@ -36,6 +36,7 @@ const manageOutputFolder = (outputFolder) => {
       console.log("Directory successfully created");
     } catch {
       console.error(err);
+      process.exit(-1);
     }
   } else {
     console.log("Directory does not exist... Creating output directory");
@@ -44,6 +45,7 @@ const manageOutputFolder = (outputFolder) => {
       console.log("Directory successfully created");
     } catch (err) {
       console.error(err);
+      process.exit(-1);
     }
   }
 };
@@ -78,6 +80,7 @@ const generateHTML = (fileData, filePath, outputFolder) => {
       console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`);
     } catch (err) {
       console.error(err);
+      process.exit(-1);
     }
   }
 };
@@ -145,7 +148,7 @@ const readFileFromPath = (filePath, outputFolder) => {
       data = fs.readFileSync(filePath[a], "utf8");
       } catch (err) {
       console.error(`Error while processing text file\nError: ${err}`);
-      return;
+      process.exit(-1);
     }
     const fileType = filePath[a].split(".").pop();
     markupData.push(addHTMLMarkup(data.split("\r\n"), fileType));
@@ -159,7 +162,7 @@ const readFileFromPath = (filePath, outputFolder) => {
 
   } catch (err) {
     console.error(`Error while processing text file\nError: ${err}`);
-    return;
+    process.exit(-1);
   }
 };
 
@@ -183,7 +186,7 @@ const determinePath = (inputPath, outputFolder = "./til") => {
       fs.readdir(inputPath[0], (err, files) => {
         if (err) {
           console.error(`Unable to read directory.\nError: ${err}`);
-          return;
+          process.exit(-1);
         } else {
           // Get all file paths from directory that end with .txt or .md
           for (let i = 0; i < files.length; i++) {
@@ -197,6 +200,7 @@ const determinePath = (inputPath, outputFolder = "./til") => {
       });
     } else {
       console.error(`Path does not point to a text file. \n`);
+      process.exit(-1);
     }
   } catch (err) {
     console.error(`Unable to access path.`);
@@ -205,6 +209,7 @@ const determinePath = (inputPath, outputFolder = "./til") => {
     } else {
       console.error(err);
     }
+    process.exit(-1);
   }
 };
 
