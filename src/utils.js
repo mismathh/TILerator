@@ -4,6 +4,7 @@ const path = require("path");
 const { version } = require("../package.json");
 const { start } = require( "repl" );
 const markdownToHTML = require("./markdownToHTML.js");
+const parseCodeBlock = require( "./parseCodeBlock" );
 
 /* Help message that shows how to use tool and the options that are available */
 const helpManual = () => {
@@ -90,10 +91,34 @@ const addHTMLMarkup = (lines, fileType) => {
   let markupTitle = "";
   let paragraphs = [""];
   let startIndex = 0;
+  let codeBlockStartIndex = -1;
+  let codeBlockEndIndex = -1;
   let pIndex = 0;
 
   // Parse markdown tags
   if (fileType === "md") {
+
+    // Loop through to check for code blocks
+    for (i = 0; i < body.length; i++) {
+      if (body[i] === ("```") && codeBlockStartIndex === -1) {
+        codeBlockStartIndex = i;
+      } else if (body[i] === ("```") && codeBlockStartIndex !== -1) {
+        codeBlockEndIndex = i;
+      }
+
+      // If code block is found, parse it and join to form one paragraph
+      if (codeBlockStartIndex !== -1 && codeBlockEndIndex !== -1) {
+        body[codeBlockStartIndex] = body.slice(codeBlockStartIndex, codeBlockEndIndex).join("\n\t\t\t\t\t") + body[codeBlockEndIndex];
+        for (j = codeBlockStartIndex + 1; j <= codeBlockEndIndex; j++) {
+          body[j] = "";
+        }
+        codeBlockStartIndex = -1;
+        codeBlockEndIndex = -1;
+      }
+    }
+
+    // Parse markdown to HTML tags
+    body = body.map(line => parseCodeBlock(line));
     body = body.map(line => markdownToHTML(line));
   }
 
@@ -116,7 +141,8 @@ const addHTMLMarkup = (lines, fileType) => {
       
     }
 
-    if (body[startIndex] === "") {
+    // Move index to next line if there are multiple empty lines
+    while (body[startIndex] === "" && startIndex < body.length - 1) {
       startIndex++;
       i++;
     }
@@ -127,7 +153,11 @@ const addHTMLMarkup = (lines, fileType) => {
   }
 
   let markupParagraphs = paragraphs.map((paragraph, index) => {
-    return `<p>${paragraph}</p>`;
+    if (!paragraph.startsWith("<pre>") && !paragraph.endsWith("</pre>")) {
+      return `<p>${paragraph}</p>`;
+    } else {
+      return paragraph;
+    }
   });
 
   if (markupTitle !== "") {
