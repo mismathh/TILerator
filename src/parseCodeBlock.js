@@ -3,7 +3,7 @@ const parseCodeBlock = (lines) => {
 
     const codeBlockPattern = /```([^*]+)```/g;
     html = html.replace(codeBlockPattern, (match, codeText) => {
-      codeBlock = `<pre>\n\t\t\t\t<code>${codeText}\n\t\t\t\t</code>\n\t\t\t<pre>`
+      codeBlock = `<pre>\n\t\t\t\t<code>${codeText}\n\t\t\t\t</code>\n\t\t\t</pre>`
       return codeBlock;
     });
 
