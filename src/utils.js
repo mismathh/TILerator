@@ -2,7 +2,6 @@
 const fs = require("fs");
 const path = require("path");
 const { version } = require("../package.json");
-const { start } = require("repl");
 const markdownToHTML = require("./markdownToHTML.js");
 const parseCodeBlock = require("./parseCodeBlock");
 
