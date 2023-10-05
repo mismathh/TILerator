@@ -3,7 +3,6 @@ const utils = require("../src/utils.js");
 var toml = require("toml");
 var concat = require("concat-stream");
 var fs = require("fs");
-const path = require("path");
 // Check if user has provided an argument
 if (process.argv.length === 2) {
   console.error(
@@ -37,7 +36,7 @@ if (process.argv.length === 2) {
             })
           );
         } catch (err) {
-          console.log(err.message);
+          console.error("Cannot find config file");
           process.exit(-1);
         }
       }
