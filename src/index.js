@@ -29,7 +29,7 @@ if (process.argv.length === 2) {
       filePath = input[2];
       if (input[1].includes(".toml")) {
         fs.createReadStream(input[1], "utf8")
-          .on("error", (error) => console.log(error.message))
+          .on("error", (error) => console.error("Invalid .toml file"))
           .pipe(
             concat(function (data) {
               var parsed = toml.parse(data);
