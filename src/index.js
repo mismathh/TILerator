@@ -39,9 +39,12 @@ if (process.argv.length === 2) {
           console.error("Cannot find config file");
           process.exit(-1);
         }
+      } else {
+        console.log("Invalid .toml file");
+        process.exit(-1);
       }
     } else {
-      console.error("Invalid .toml file");
+      console.log("Invalid .toml file");
       process.exit(-1);
     }
   } else if (
