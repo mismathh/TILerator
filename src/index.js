@@ -3,6 +3,7 @@ const utils = require("../src/utils.js");
 var toml = require("toml");
 var concat = require("concat-stream");
 var fs = require("fs");
+const { error } = require("console");
 // Check if user has provided an argument
 if (process.argv.length === 2) {
   console.error(
@@ -27,18 +28,15 @@ if (process.argv.length === 2) {
     if (input[0] === "-c" || input[0] === "--config") {
       filePath = input[2];
       if (input[1].includes(".toml")) {
-        try {
-          fs.createReadStream(input[1], "utf8").pipe(
+        fs.createReadStream(input[1], "utf8")
+          .on("error", (error) => console.log(error.message))
+          .pipe(
             concat(function (data) {
               var parsed = toml.parse(data);
               utils.determinePath([filePath], parsed.output);
               process.exit(0);
             })
           );
-        } catch (err) {
-          console.error("Cannot find config file");
-          process.exit(-1);
-        }
       } else {
         console.error("Invalid .toml file");
         process.exit(-1);
