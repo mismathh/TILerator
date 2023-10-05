@@ -1,6 +1,9 @@
 #! /usr/bin/env node
 const utils = require("../src/utils.js");
-
+var toml = require("toml");
+var concat = require("concat-stream");
+var fs = require("fs");
+const { error } = require("console");
 // Check if user has provided an argument
 if (process.argv.length === 2) {
   console.error(
@@ -17,6 +20,31 @@ if (process.argv.length === 2) {
   } else if (input.includes("-h") || input.includes("--help")) {
     utils.helpManual();
     process.exit(0);
+  } else if (
+    (input.includes("-c") || input.includes("--config")) &&
+    input.length === 3
+  ) {
+    let filePath = "";
+    if (input[0] === "-c" || input[0] === "--config") {
+      filePath = input[2];
+      if (input[1].includes(".toml")) {
+        fs.createReadStream(input[1], "utf8")
+          .on("error", (error) => console.error("Invalid .toml file"))
+          .pipe(
+            concat(function (data) {
+              var parsed = toml.parse(data);
+              utils.determinePath([filePath], parsed.output);
+              process.exit(0);
+            })
+          );
+      } else {
+        console.error("Invalid .toml file");
+        process.exit(-1);
+      }
+    } else {
+      console.error("Invalid .toml file");
+      process.exit(-1);
+    }
   } else if (
     (input.includes("-o") || input.includes("--output")) &&
     input.length === 3

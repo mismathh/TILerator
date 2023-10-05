@@ -14,5 +14,9 @@
     "TILerator": "./src/index.js"
   },
   "author": "Muzzammil Ismathhimam",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "concat-stream": "^2.0.0",
+    "toml": "^3.0.0"
+  }
 }

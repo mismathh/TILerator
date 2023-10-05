@@ -2,9 +2,8 @@
 const fs = require("fs");
 const path = require("path");
 const { version } = require("../package.json");
-const { start } = require( "repl" );
 const markdownToHTML = require("./markdownToHTML.js");
-const parseCodeBlock = require( "./parseCodeBlock" );
+const parseCodeBlock = require("./parseCodeBlock");
 
 /* Help message that shows how to use tool and the options that are available */
 const helpManual = () => {
@@ -17,6 +16,7 @@ Flag Options:
     --help,    -h      Show help manual
     --version, -v      Show tool version
     --output,  -o      Custom output directory -- need to implement
+    --config,  -c      Specify all options in a TOML config file
 ===============================================`);
 };
 
@@ -57,7 +57,6 @@ const generateHTML = (fileData, filePath, outputFolder) => {
 
   // Generate HTML file for each text file
   for (i = 0; i < fileData.length; i++) {
-
     if (files[i][0] === "") {
       files[i][0] = `TIL Post ${i + 1}`;
     }
@@ -76,9 +75,20 @@ const generateHTML = (fileData, filePath, outputFolder) => {
 
     // Write input to HTML file -- Need to update for custom output path
     try {
-      fs.writeFileSync(`${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`, html);
+      fs.writeFileSync(
+        `${outputFolder}/${path.basename(
+          filePath[i],
+          path.extname(filePath[i])
+        )}.html`,
+        html
+      );
       // need to update for custom output path
-      console.log(`File successfully written at: ${outputFolder}/${path.basename(filePath[i], path.extname(filePath[i]))}.html`);
+      console.log(
+        `File successfully written at: ${outputFolder}/${path.basename(
+          filePath[i],
+          path.extname(filePath[i])
+        )}.html`
+      );
     } catch (err) {
       console.error(err);
       process.exit(-1);
@@ -97,18 +107,20 @@ const addHTMLMarkup = (lines, fileType) => {
 
   // Parse markdown tags
   if (fileType === "md") {
-
     // Loop through to check for code blocks
     for (i = 0; i < body.length; i++) {
-      if (body[i] === ("```") && codeBlockStartIndex === -1) {
+      if (body[i] === "```" && codeBlockStartIndex === -1) {
         codeBlockStartIndex = i;
-      } else if (body[i] === ("```") && codeBlockStartIndex !== -1) {
+      } else if (body[i] === "```" && codeBlockStartIndex !== -1) {
         codeBlockEndIndex = i;
       }
 
       // If code block is found, parse it and join to form one paragraph
       if (codeBlockStartIndex !== -1 && codeBlockEndIndex !== -1) {
-        body[codeBlockStartIndex] = body.slice(codeBlockStartIndex, codeBlockEndIndex).join("\n\t\t\t\t\t") + body[codeBlockEndIndex];
+        body[codeBlockStartIndex] =
+          body
+            .slice(codeBlockStartIndex, codeBlockEndIndex)
+            .join("\n\t\t\t\t\t") + body[codeBlockEndIndex];
         for (j = codeBlockStartIndex + 1; j <= codeBlockEndIndex; j++) {
           body[j] = "";
         }
@@ -118,8 +130,8 @@ const addHTMLMarkup = (lines, fileType) => {
     }
 
     // Parse markdown to HTML tags
-    body = body.map(line => parseCodeBlock(line));
-    body = body.map(line => markdownToHTML(line));
+    body = body.map((line) => parseCodeBlock(line));
+    body = body.map((line) => markdownToHTML(line));
   }
 
   // Check if there is a title in text file
@@ -132,13 +144,12 @@ const addHTMLMarkup = (lines, fileType) => {
     markupTitle = `<h1>${body[0]}</h1>`;
     body.splice(0, 3);
   }
-  
+
   for (i = 0; i < body.length; i++) {
     if (body[i] === "") {
       paragraphs[pIndex] = body.slice(startIndex, i).join(" ");
       startIndex = i + 1;
       pIndex++;
-      
     }
 
     // Move index to next line if there are multiple empty lines
@@ -148,7 +159,7 @@ const addHTMLMarkup = (lines, fileType) => {
     }
 
     if (i === body.length - 1) {
-      paragraphs[pIndex] = body.slice(startIndex, i +1).join(" ");
+      paragraphs[pIndex] = body.slice(startIndex, i + 1).join(" ");
     }
   }
 
@@ -176,7 +187,7 @@ const readFileFromPath = (filePath, outputFolder) => {
   for (a = 0; a < filePath.length; a++) {
     try {
       data = fs.readFileSync(filePath[a], "utf8");
-      } catch (err) {
+    } catch (err) {
       console.error(`Error while processing text file\nError: ${err}`);
       process.exit(-1);
     }
@@ -187,9 +198,8 @@ const readFileFromPath = (filePath, outputFolder) => {
   try {
     // Reset output folder
     manageOutputFolder(outputFolder);
-  
-    generateHTML(markupData, filePath, outputFolder);
 
+    generateHTML(markupData, filePath, outputFolder);
   } catch (err) {
     console.error(`Error while processing text file\nError: ${err}`);
     process.exit(-1);
