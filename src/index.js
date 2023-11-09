@@ -60,10 +60,8 @@ if (process.argv.length === 2) {
       filePath = input[0];
     }
     utils.determinePath([filePath], outputFolder);
-    process.exit(0);
   } else if (input.length === 1 && !input[0].startsWith("-")) {
     utils.determinePath([input[0]]);
-    process.exit(0);
   } else {
     console.error(
       "Invalid arguments provided. Enter TILerator --help for more information.\n"

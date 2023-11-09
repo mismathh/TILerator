@@ -94,6 +94,7 @@ const generateHTML = (fileData, filePath, outputFolder) => {
       process.exit(-1);
     }
   }
+  process.exit(0);
 };
 
 const addHTMLMarkup = (lines, fileType) => {
