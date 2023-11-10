@@ -188,12 +188,12 @@ const readFileFromPath = (filePath, outputFolder) => {
   for (a = 0; a < filePath.length; a++) {
     try {
       data = fs.readFileSync(filePath[a], "utf8");
+      const fileType = filePath[a].split(".").pop();
+      markupData.push(addHTMLMarkup(data.split("\r\n"), fileType));
     } catch (err) {
       console.error(`Error while processing text file\nError: ${err}`);
       process.exit(-1);
     }
-    const fileType = filePath[a].split(".").pop();
-    markupData.push(addHTMLMarkup(data.split("\r\n"), fileType));
   }
 
   try {
@@ -202,7 +202,7 @@ const readFileFromPath = (filePath, outputFolder) => {
 
     generateHTML(markupData, filePath, outputFolder);
   } catch (err) {
-    console.error(`Error while processing text file\nError: ${err}`);
+    console.error(`Error while generating HTML file\nError: ${err}`);
     process.exit(-1);
   }
 };
