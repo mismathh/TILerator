@@ -2,23 +2,6 @@
 
 A CL tool that will be able to generate TIL posts. It will be able to convert text, snippets of code, and images to HTML format
 
-# Setup
-
-Make sure you have [node and npm ](https://nodejs.org/en/download) installed
-
-```
-node -v
-npm -v
-```
-
-Clone repository and install node packages locally
-
-```
-git clone https://github.com/mismathh/TILerator.git
-cd TILerator
-npm install -g .
-```
-
 # Features
 
 Mandatory Features
