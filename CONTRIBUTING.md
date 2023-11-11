@@ -142,3 +142,20 @@ git clone https://github.com/mismathh/TILerator.git
 cd TILerator
 npm install -g .
 ```
+
+#### Unit Testing
+All tests can be run by using:
+```
+npm run test
+```
+A single test can be run by adding the `test filename` to the end of `npm run test`:
+```
+npm run test "test filename"
+```
+Tests can be run in watch mode, where they will automatically be run when the test or source code is altered:
+```
+npm run test:watch
+```
+
+#### Writing unit tests
+Create new unit tests within the `test/unit` directory with the name of the test ending in `.test.js`. If you are writing tests for the `index.js` file, your test should be named `index.test.js`.
