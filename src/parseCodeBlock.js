@@ -5,7 +5,7 @@ const parseCodeBlock = (lines) => {
 
   let html = lines;
 
-  const codeBlockPattern = /```([^*]+)``break`/g;
+  const codeBlockPattern = /```([^*]+)```/g;
   html = html.replace(codeBlockPattern, (match, codeText) => {
     codeBlock = `<pre>\n\t\t\t\t<code>${codeText}\n\t\t\t\t</code>\n\t\t\t</pre>`;
     return codeBlock;
