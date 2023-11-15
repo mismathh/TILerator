@@ -1,19 +1,22 @@
 const parseCodeBlock = (lines) => {
-    let html = lines;
+  if (typeof lines !== "string") {
+    throw new Error("Invalid input: text must be a string");
+  }
 
-    const codeBlockPattern = /```([^*]+)```/g;
-    html = html.replace(codeBlockPattern, (match, codeText) => {
-      codeBlock = `<pre>\n\t\t\t\t<code>${codeText}\n\t\t\t\t</code>\n\t\t\t</pre>`
-      return codeBlock;
-    });
+  let html = lines;
 
-    const inlineCodePattern1 = /\`([^*]+)\`/g;
-    html = html.replace(inlineCodePattern1, (match, codeText) => {
-      return `<code>${codeText}</code>`;
-    });
+  const codeBlockPattern = /```([^*]+)```/g;
+  html = html.replace(codeBlockPattern, (match, codeText) => {
+    codeBlock = `<pre>\n\t\t\t\t<code>${codeText}\n\t\t\t\t</code>\n\t\t\t</pre>`;
+    return codeBlock;
+  });
 
+  const inlineCodePattern1 = /\`([^*]+)\`/g;
+  html = html.replace(inlineCodePattern1, (match, codeText) => {
+    return `<code>${codeText}</code>`;
+  });
 
-    return html;
+  return html;
 };
 
 module.exports = parseCodeBlock;
