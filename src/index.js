@@ -3,7 +3,7 @@ const utils = require("../src/utils.js");
 var toml = require("toml");
 var concat = require("concat-stream");
 var fs = require("fs");
-const { error } = require("console");
+
 // Check if user has provided an argument
 if (process.argv.length === 2) {
   console.error(
