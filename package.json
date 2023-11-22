@@ -1,6 +1,6 @@
 {
   "name": "tilerator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CL tool that will be able to generate TIL posts. It will be able to convert text, snippets of code, and images to HTML format",
   "main": "src/index.js",
   "scripts": {
