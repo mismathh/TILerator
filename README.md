@@ -28,6 +28,7 @@ Optional Features
 - Converts bold text in Markdown syntax to `<b>...</b>` tags
 - Converts code blocks in Markdown syntax to `<pre...</pre>` and `<code>...</code>` tags
 - Allows a custom output folder path to be passed using `--output` or `-o` flag
+- TOML Configuration Support: Custom output directory can be set within a TOML configuration file instead of repeatedly passing it in within the command-line arguments. The `-c` or `--config` flag followed by the path of the TOML configuration file can be used. 
 
 ## Usage/Examples
 
