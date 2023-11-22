@@ -2,7 +2,15 @@
 
 A CL tool that will be able to generate TIL posts. It will be able to convert text, snippets of code, and images to HTML format
 
-# Features
+## Install TILerator
+Make sure you have [node and npm ](https://nodejs.org/en/download) installed.
+
+```JavaScript
+// Install TILerator globally
+npm i -g @mismathh/tilerator
+```
+
+## Features
 
 Mandatory Features
 
@@ -17,43 +25,52 @@ Mandatory Features
 Optional Features
 
 - Parses title from text file to enhance HTML with `<h1>...</h1>` markup tags
+- Converts bold text in Markdown syntax to `<b>...</b>` tags
+- Converts code blocks in Markdown syntax to `<pre...</pre>` and `<code>...</code>` tags
 - Allows a custom output folder path to be passed using `--output` or `-o` flag
 
-# Usage/Examples
+## Usage/Examples
 
-```
-TILerator [flag] <filePath | directoryPath>
+```JavaScript
+tilerator [flag] <filePath | directoryPath>
 ```
 
 Pass in a flag
 
-```
-TILerator <flag>
+```JavaScript
+tilerator <flag>
 
---> TILerator -v
+--> tilerator -v
 ```
 
 Pass in a file path or directory path
 
-```
-TILerator <filePath | directoryPath>
+```JavaScript
+tilerator <filePath | directoryPath>
 
---> TILerator ./examples/example1.txt
+--> tilerator ./examples/example1.txt
 ```
 
 Use the `-o` or `--output` flag to generate html files in a custom folder
 
-```
----> TILerator ./examples/til_Sample.txt -o ./htmlFiles
+```JavaScript
+---> tilerator ./examples/til_Sample.txt -o ./htmlFiles
 ```
 
 Use the `-c` or `--config` flag to specify all options in a TOML config file
 
-```
----> TILerator -c config.toml ./examples/til_Sample.txt
+```JavaScript
+// Sample config.toml file
+
+// Output directory for generated files
+output = "./build"
 ```
 
-## Flags
+```JavaScript
+---> tilerator -c config.toml ./examples/til_Sample.txt
+```
+
+### Flags
 
 | Flag          | Description                               |
 | ------------- | ----------------------------------------- |
