@@ -10,10 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/mismathh/TILerator.git"
+    "url": "git+https://github.com/mismathh/TILerator.git"
   },
   "bin": {
-    "TILerator": "./src/index.js"
+    "TILerator": "src/index.js"
   },
   "author": "Muzzammil Ismathhimam",
   "license": "MIT",
