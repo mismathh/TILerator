@@ -1,5 +1,5 @@
 {
-  "name": "mismathh@tilerator",
+  "name": "@mismathh/tilerator",
   "version": "1.0.2",
   "description": "A CL tool that will be able to generate TIL posts. It will be able to convert text, snippets of code, and images to HTML format",
   "main": "src/index.js",
